@@ -137,6 +137,12 @@ footer { background: var(--surface); border-top: 1px solid var(--border); paddin
 
 <header>
   <div class="logo">Marriage Visa</div>
+  <nav style="display: flex; gap: 24px; flex: 1; margin-left: 40px; font-size: 14px;">
+    <a href="#solution-title" style="color: var(--text-primary); text-decoration: none; cursor: pointer;" onclick="document.getElementById('solution-title').scrollIntoView({behavior:'smooth'})">고민별 솔루션</a>
+    <a href="#case-title" style="color: var(--text-primary); text-decoration: none; cursor: pointer;" onclick="document.getElementById('case-title').scrollIntoView({behavior:'smooth'})">성공 사례</a>
+    <a href="#stats-title" style="color: var(--text-primary); text-decoration: none; cursor: pointer;" onclick="document.getElementById('stats-title').scrollIntoView({behavior:'smooth'})">기록</a>
+    <a href="#cta-title" style="color: var(--text-primary); text-decoration: none; cursor: pointer;" onclick="document.getElementById('cta-title').scrollIntoView({behavior:'smooth'})">상담</a>
+  </nav>
   <div class="lang-switch">
     <span class="active" onclick="setLang('ko')">한글</span>
     <span onclick="setLang('en')">EN</span>
@@ -671,8 +677,13 @@ const content = {
 };
 
 function setLang(lang) {
-  document.querySelectorAll('.lang-switch span').forEach(s => s.classList.remove('active'));
-  event.target.classList.add('active');
+  const spans = document.querySelectorAll('.lang-switch span');
+  spans.forEach(s => s.classList.remove('active'));
+  if (event && event.target) {
+    event.target.classList.add('active');
+  } else {
+    spans[0].classList.add('active');
+  }
 
   for (let key in content[lang]) {
     const elem = document.getElementById(key);
@@ -680,12 +691,17 @@ function setLang(lang) {
   }
 
   document.querySelectorAll('.stage').forEach((s, i) => {
-    s.textContent = [content[lang]['stage1'], content[lang]['stage2'], content[lang]['stage3'], content[lang]['stage4']][i];
+    const stageKeys = ['stage1', 'stage2', 'stage3', 'stage4'];
+    if (content[lang][stageKeys[i]]) {
+      s.textContent = content[lang][stageKeys[i]];
+    }
   });
 
   document.querySelectorAll('.tab span').forEach((s, i) => {
-    const labels = [content[lang]['tab1-label'], content[lang]['tab2-label'], content[lang]['tab3-label'], content[lang]['tab4-label']];
-    s.textContent = labels[i];
+    const tabKeys = ['tab1-label', 'tab2-label', 'tab3-label', 'tab4-label'];
+    if (content[lang][tabKeys[i]]) {
+      s.textContent = content[lang][tabKeys[i]];
+    }
   });
 }
 
