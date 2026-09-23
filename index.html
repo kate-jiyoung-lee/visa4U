@@ -706,6 +706,11 @@ document.querySelectorAll('.stage').forEach(stage => {
     stage.classList.add('active');
   });
 });
+
+// 페이지 로드 시 한글로 설정
+window.addEventListener('load', () => {
+  setLang('ko');
+});
 </script>
 </body>
 </html>
