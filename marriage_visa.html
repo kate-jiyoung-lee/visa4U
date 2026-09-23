@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marriage Visa</title>
+<style>
+:root {
+  --primary: #185FA5;
+  --primary-light: #E6F1FB;
+  --success: #0F6E56;
+  --success-light: #E1F5EE;
+  --warning: #BA7517;
+  --warning-light: #FAEEDA;
+  --danger: #A32D2D;
+  --danger-light: #FCEBEB;
+  --text-primary: #1a1a1a;
+  --text-secondary: #555;
+  --text-muted: #888;
+  --bg: #fafaf8;
+  --surface: #fff;
+  --border: #e5e5e5;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --primary: #85B7EB;
+    --primary-light: #0C447C;
+    --success: #5DCAA5;
+    --success-light: #085041;
+    --warning: #EF9F27;
+    --warning-light: #633806;
+    --danger: #F09595;
+    --danger-light: #501313;
+    --text-primary: #e0e0e0;
+    --text-secondary: #aaa;
+    --text-muted: #777;
+    --bg: #1a1a1a;
+    --surface: #2c2c2c;
+    --border: #404040;
+  }
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif; background: var(--bg); color: var(--text-primary); line-height: 1.6; }
+a { color: var(--primary); text-decoration: none; }
+
+header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+.logo { font-weight: 700; font-size: 18px; color: var(--primary); letter-spacing: -0.5px; }
+.lang-switch { display: flex; gap: 8px; font-size: 12px; }
+.lang-switch span { padding: 6px 12px; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
+.lang-switch span.active { background: var(--primary); color: white; }
+.lang-switch span:hover { background: var(--primary-light); }
+
+.hero { background: linear-gradient(135deg, var(--primary-light) 0%, rgba(24, 95, 165, 0.05) 100%); padding: 60px 24px; text-align: center; }
+.hero-content { max-width: 600px; margin: 0 auto; }
+.hero h1 { font-size: 32px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px; line-height: 1.3; }
+.hero p { font-size: 16px; color: var(--text-secondary); margin-bottom: 32px; }
+.cta-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn { padding: 12px 24px; border-radius: 6px; font-size: 14px; font-weight: 600; text-decoration: none; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { opacity: 0.9; }
+.btn-secondary { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); }
+.btn-secondary:hover { background: var(--primary-light); }
+
+.section { padding: 48px 24px; border-bottom: 1px solid var(--border); }
+.section-title { font-size: 24px; font-weight: 700; color: var(--text-primary); margin-bottom: 32px; text-align: center; }
+.progress-stages { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; }
+.stage { flex: 1; min-width: 120px; padding: 16px 12px; background: var(--surface); border: 2px solid var(--border); border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.2s; font-size: 13px; font-weight: 500; }
+.stage.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+
+.problem-tabs { display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap; }
+.tab { padding: 8px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: 500; white-space: nowrap; transition: all 0.2s; }
+.tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+.problem-content { background: var(--surface); padding: 32px 24px; border-radius: 8px; border: 1px solid var(--border); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.risk-card { background: var(--primary-light); border-left: 4px solid var(--primary); padding: 16px; border-radius: 6px; margin: 16px 0; }
+.risk-card h4 { font-size: 14px; font-weight: 600; color: var(--primary); margin-bottom: 8px; }
+.risk-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+.checklist-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+.checklist-item:last-child { border-bottom: none; }
+.checkbox { width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 4px; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.checkbox.checked { background: var(--success); border-color: var(--success); color: white; font-size: 12px; }
+.checklist-text strong { display: block; font-weight: 600; margin-bottom: 4px; }
+.checklist-text small { color: var(--text-muted); font-size: 12px; }
+
+.cost-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin: 24px 0; }
+.cost-card { background: var(--surface); border: 1px solid var(--border); padding: 16px; border-radius: 8px; text-align: center; }
+.cost-amount { font-size: 18px; font-weight: 700; color: var(--primary); }
+.cost-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+.timeline { position: relative; padding: 20px 0; }
+.timeline-item { display: flex; gap: 16px; margin-bottom: 20px; }
+.timeline-dot { width: 12px; height: 12px; background: var(--primary); border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.timeline-text strong { display: block; font-weight: 600; margin-bottom: 4px; }
+.timeline-text { font-size: 14px; color: var(--text-secondary); }
+
+.guide-step { background: var(--success-light); border-left: 4px solid var(--success); padding: 16px; border-radius: 6px; margin-bottom: 16px; }
+.guide-step strong { display: block; font-weight: 600; color: var(--success); margin-bottom: 8px; }
+.guide-step p { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin: 24px 0; }
+.stat-card { background: var(--surface); padding: 20px; border-radius: 8px; text-align: center; border: 1px solid var(--border); }
+.stat-number { font-size: 24px; font-weight: 700; color: var(--primary); }
+.stat-label { font-size: 12px; color: var(--text-muted); margin-top: 8px; }
+
+.stories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+.story-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 24px; }
+.story-icon { width: 40px; height: 40px; background: var(--primary-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--primary); margin-bottom: 16px; }
+.story-card h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
+.story-card .problem { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; font-style: italic; }
+.story-card .quote { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px; padding: 12px; background: var(--bg); border-radius: 4px; border-left: 3px solid var(--primary); }
+.story-author { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+.story-detail { font-size: 12px; color: var(--text-muted); }
+
+.cta-section { background: var(--primary); color: white; text-align: center; padding: 48px 24px; }
+.cta-section h2 { font-size: 28px; font-weight: 700; margin-bottom: 16px; }
+.cta-section p { font-size: 16px; margin-bottom: 24px; opacity: 0.95; }
+.cta-section .btn { background: white; color: var(--primary); padding: 14px 32px; }
+
+footer { background: var(--surface); border-top: 1px solid var(--border); padding: 32px 24px; text-align: center; font-size: 12px; color: var(--text-muted); }
+
+@media (max-width: 768px) {
+  .hero h1 { font-size: 24px; }
+  .section { padding: 32px 16px; }
+  .stories-grid { grid-template-columns: 1fr; }
+  .cta-group { flex-direction: column; }
+  .btn { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Marriage Visa</div>
+  <div class="lang-switch">
+    <span class="active" onclick="setLang('ko')">한글</span>
+    <span onclick="setLang('en')">EN</span>
+    <span onclick="setLang('vi')">Việt</span>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-content">
+    <h1 id="hero-title">한국 배우자와 함께, 비자부터 영주권까지</h1>
+    <p id="hero-desc">F-6 결혼비자 신청부터 F-2 영주권 전환, 가족 초대까지. 변호사가 모든 단계를 책임집니다.</p>
+    <div class="cta-group">
+      <button class="btn btn-primary" id="btn-diagnosis">무료 위험도 진단</button>
+      <button class="btn btn-secondary" id="btn-consult">상담 신청</button>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title" id="progress-title">당신은 지금 어디에 있나요?</h2>
+  <div class="progress-stages">
+    <div class="stage active" id="stage1">결혼식 전</div>
+    <div class="stage" id="stage2">비자 신청 중</div>
+    <div class="stage" id="stage3">한국 도착 후</div>
+    <div class="stage" id="stage4">영주권 준비</div>
+  </div>
+</div>
+
+<div class="section" style="background: var(--bg);">
+  <h2 class="section-title" id="solution-title">고민별 솔루션</h2>
+  <div class="problem-tabs">
+    <div class="tab active" onclick="switchTab(0)">
+      <span id="tab1-label">위험도 진단</span>
+    </div>
+    <div class="tab" onclick="switchTab(1)">
+      <span id="tab2-label">서류 체크</span>
+    </div>
+    <div class="tab" onclick="switchTab(2)">
+      <span id="tab3-label">비용 & 일정</span>
+    </div>
+    <div class="tab" onclick="switchTab(3)">
+      <span id="tab4-label">생활가이드</span>
+    </div>
+  </div>
+
+  <div class="problem-content">
+    <!-- Tab 1 -->
+    <div class="tab-content active">
+      <div style="margin-bottom: 24px;">
+        <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;" id="tab1-title">당신의 F-6 거절 위험도는?</h3>
+        <div style="margin: 24px 0;">
+          <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px;" id="tab1-risk-label">위험도 진단 결과</div>
+          <div style="background: var(--border); height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 8px;"><div style="height: 100%; background: var(--success); width: 15%; border-radius: 4px;"></div></div>
+          <div style="font-size: 12px; color: var(--text-muted);" id="tab1-risk-text">✓ Low (15%) - Approved in most cases</div>
+        </div>
+      </div>
+      <div class="risk-card">
+        <h4 id="tab1-strength">✓ Your Strengths</h4>
+        <p id="tab1-strength-text">Complete income documentation, marriage over 2 months, sufficient passport validity</p>
+      </div>
+      <div class="risk-card" style="background: var(--warning-light); border-left-color: var(--warning); color: var(--warning);">
+        <h4 style="color: var(--warning);" id="tab1-caution">! Caution</h4>
+        <p style="color: var(--text-secondary);" id="tab1-caution-text">Need spouse criminal record check (consultation required if exists)</p>
+      </div>
+    </div>
+
+    <!-- Tab 2 -->
+    <div class="tab-content">
+      <div style="margin-bottom: 20px;">
+        <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;" id="tab2-title">F-6 Application Required Documents</h3>
+      </div>
+      <div class="checklist-item">
+        <div class="checkbox checked">✓</div>
+        <div class="checklist-text">
+          <strong id="doc1-name">Marriage Certificate (Korean + Vietnamese Official Copy)</strong>
+          <small id="doc1-desc">Issued by Vietnamese Embassy or Local Administrative Office</small>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <div class="checkbox"></div>
+        <div class="checklist-text">
+          <strong id="doc2-name">Korean Spouse ID Copy</strong>
+          <small id="doc2-desc">Both sides in color</small>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <div class="checkbox"></div>
+        <div class="checklist-text">
+          <strong id="doc3-name">Spouse Income Proof</strong>
+          <small id="doc3-desc">Salary slip or Business income certificate (last 3 months)</small>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <div class="checkbox"></div>
+        <div class="checklist-text">
+          <strong id="doc4-name">Foreign Spouse Passport Copy</strong>
+          <small id="doc4-desc">Valid for 6+ months</small>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <div class="checkbox"></div>
+        <div class="checklist-text">
+          <strong id="doc5-name">Family Relationship Certificate (Spouse)</strong>
+          <small id="doc5-desc">Issued by Korean administration</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3 -->
+    <div class="tab-content">
+      <div style="margin-bottom: 20px;">
+        <h3 style="font-size: 16px; font-weight: 600;" id="tab3-title">F-6 Application Cost</h3>
+      </div>
+      <div class="cost-grid">
+        <div class="cost-card">
+          <div class="cost-amount">190,000</div>
+          <div class="cost-label" id="cost1-label">Immigration Fee</div>
+        </div>
+        <div class="cost-card">
+          <div class="cost-amount">2M</div>
+          <div class="cost-label" id="cost2-label">Vietnam Notary (optional)</div>
+        </div>
+        <div class="cost-card">
+          <div class="cost-amount">500k</div>
+          <div class="cost-label" id="cost3-label">Korea Notary (optional)</div>
+        </div>
+        <div class="cost-card">
+          <div class="cost-amount">500k~1.5M</div>
+          <div class="cost-label" id="cost4-label">Admin Service Fee (optional)</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 28px;">
+        <h4 style="font-size: 15px; font-weight: 600; margin-bottom: 16px;" id="tab3-timeline">Timeline to Approval</h4>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-text">
+              <strong id="time1-title">Week 1 - Document Preparation</strong>
+              <p id="time1-desc">Review checklist and collect required documents</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-text">
+              <strong id="time2-title">1-2 Weeks - Notarization & Translation</strong>
+              <p id="time2-desc">Vietnam/Korea notarization, translation if needed</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-text">
+              <strong id="time3-title">1 Week - Immigration Application</strong>
+              <p id="time3-desc">Submit through Korean spouse or admin service</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-text">
+              <strong id="time4-title">4-8 Weeks - Review Period</strong>
+              <p id="time4-desc">Average 45 days (68% approved within 2 months)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; background: var(--primary-light); padding: 16px; border-radius: 8px; border-left: 4px solid var(--primary);">
+        <strong style="color: var(--primary);" id="approval-rate">98% Approval Rate</strong>
+        <p style="font-size: 14px; color: var(--text-secondary); margin-top: 8px;" id="approval-note">Based on our clients (2024)</p>
+      </div>
+    </div>
+
+    <!-- Tab 4 -->
+    <div class="tab-content">
+      <div style="margin-bottom: 20px;">
+        <h3 style="font-size: 16px; font-weight: 600;" id="tab4-title">First 72 Hours in Korea</h3>
+      </div>
+
+      <div class="guide-step">
+        <strong id="day1-title">Day 1: Foreign Registration at Police</strong>
+        <p id="day1-desc">Required: Passport, health certificate, spouse ID | Time: 30 min | Cost: Free</p>
+      </div>
+
+      <div class="guide-step">
+        <strong id="day2-title">Day 2: Bank Account Opening</strong>
+        <p id="day2-desc">Required: Passport, foreign reg. card, spouse name card | Time: 20 min | Cost: Free</p>
+      </div>
+
+      <div class="guide-step">
+        <strong id="day3-title">Day 3: Mobile Phone Setup</strong>
+        <p id="day3-desc">Required: Passport, foreign reg. card, Korean address | Time: 15 min | Monthly: 30-50k KRW</p>
+      </div>
+
+      <div style="margin-top: 24px; background: var(--bg); padding: 16px; border-radius: 8px;">
+        <strong style="display: block; margin-bottom: 12px;" id="more-title">+ Recommended</strong>
+        <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6;" id="more-desc">
+          Health Insurance Registration (within 2 weeks) | National Pension (within 2 months) | Deposit/Lease Contract (if needed)
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title" id="stats-title">Our Record</h2>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-number">98%</div>
+      <div class="stat-label" id="stat1">F-6 Approval Rate</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">45</div>
+      <div class="stat-label" id="stat2">Average Days to Approval</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">1,000+</div>
+      <div class="stat-label" id="stat3">Vietnamese Couples Supported</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">100%</div>
+      <div class="stat-label" id="stat4">Transparent Costs</div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="background: var(--bg);">
+  <h2 class="section-title" id="case-title">Real Stories</h2>
+  <div class="stories-grid">
+    <div class="story-card">
+      <div class="story-icon">⚠️</div>
+      <h3 id="case1-title">Rejection Risk Resolved</h3>
+      <div class="problem" id="case1-problem">Concern: "Will my visa be rejected?"</div>
+      <div class="quote" id="case1-quote">"I was worried about insufficient income, but the risk assessment helped me find the solution. Adding my in-laws' asset certificate, I got approved with 98% certainty!"</div>
+      <div class="story-author" id="case1-author">Anh (Vietnam) + Min-jun (Korea, Self-employed)</div>
+      <div class="story-detail" id="case1-detail">2024 F-6 Approved</div>
+    </div>
+
+    <div class="story-card">
+      <div class="story-icon">📋</div>
+      <h3 id="case2-title">Documents Completed in 3 Weeks</h3>
+      <div class="problem" id="case2-problem">Concern: "I don't know what documents are needed"</div>
+      <div class="quote" id="case2-quote">"I didn't know where to get Vietnamese notarization, but following the checklist, everything was done smoothly. Saved half the time!"</div>
+      <div class="story-author" id="case2-author">Huong (Vietnam) + David (Korea, Office Worker)</div>
+      <div class="story-detail" id="case2-detail">Self-applied and saved costs</div>
+    </div>
+
+    <div class="story-card">
+      <div class="story-icon">🏠</div>
+      <h3 id="case3-title">Korea Life Settlement Guide</h3>
+      <div class="problem" id="case3-problem">Concern: "What to do first when I arrive in Korea?"</div>
+      <div class="quote" id="case3-quote">"I did everything myself on the first day: bank, phone, registration. The 72-hour guide made it possible even without my husband. Vietnamese version was so helpful!"</div>
+      <div class="story-author" id="case3-author">Thao (Vietnam) + Sung-ho (Korea)</div>
+      <div class="story-detail" id="case3-detail">Fully settled in 6 months</div>
+    </div>
+  </div>
+</div>
+
+<div class="cta-section">
+  <h2 id="cta-title">Get Your Free Consultation Now</h2>
+  <p id="cta-desc">1:1 consultation with a lawyer to create your perfect strategy</p>
+  <button class="btn" id="btn-cta">Book Consultation →</button>
+</div>
+
+<footer>
+  <p id="footer-copy">© 2024 Marriage Visa Lawyer | leejy.law@gmail.com | Seoul, Gangnam-gu</p>
+  <p style="margin-top: 12px;"><a href="#" id="footer-terms">Terms</a> | <a href="#" id="footer-privacy">Privacy</a> | <a href="#" id="footer-faq">FAQ</a></p>
+</footer>
+
+<script>
+const content = {
+  ko: {
+    'hero-title': '한국 배우자와 함께, 비자부터 영주권까지',
+    'hero-desc': 'F-6 결혼비자 신청부터 F-2 영주권 전환, 가족 초대까지. 변호사가 모든 단계를 책임집니다.',
+    'btn-diagnosis': '무료 위험도 진단',
+    'btn-consult': '상담 신청',
+    'progress-title': '당신은 지금 어디에 있나요?',
+    'stage1': '결혼식 전',
+    'stage2': '비자 신청 중',
+    'stage3': '한국 도착 후',
+    'stage4': '영주권 준비',
+    'solution-title': '고민별 솔루션',
+    'tab1-label': '위험도 진단',
+    'tab2-label': '서류 체크',
+    'tab3-label': '비용 & 일정',
+    'tab4-label': '생활가이드',
+    'tab1-title': '당신의 F-6 거절 위험도는?',
+    'tab1-risk-label': '위험도 진단 결과',
+    'tab1-risk-text': '✓ 낮음 (15%) - 대부분 승인되는 조건',
+    'tab1-strength': '✓ 당신의 강점',
+    'tab1-strength-text': '한국인 배우자 소득 증명 완비, 결혼 2개월 이상 경과, 여권 유효기간 충분',
+    'tab1-caution': '! 주의 사항',
+    'tab1-caution-text': '배우자 전과기록 확인 필요 (있으면 상담 필수)',
+    'tab2-title': 'F-6 신청 필수 서류',
+    'doc1-name': '결혼증명서 (한국 + 베트남 공식본)',
+    'doc1-desc': '베트남 대사관 또는 현지 행정부에서 발급',
+    'doc2-name': '한국인 배우자 신원증 사본',
+    'doc2-desc': '앞뒤 모두 컬러 복사본',
+    'doc3-name': '배우자 소득증명',
+    'doc3-desc': '급여명세표 또는 사업소득증명 (최근 3개월)',
+    'doc4-name': '외국인 배우자 여권 사본',
+    'doc4-desc': '유효기간 6개월 이상 남음',
+    'doc5-name': '가족관계증명서 (배우자)',
+    'doc5-desc': '한국 관할청에서 발급',
+    'tab3-title': 'F-6 신청 비용',
+    'cost1-label': '출입국청 수수료',
+    'cost2-label': '베트남 공증 (추가)',
+    'cost3-label': '한국 공증 (추가)',
+    'cost4-label': '행정사 대행료 (선택)',
+    'tab3-timeline': '승인까지 일정',
+    'time1-title': '1주 - 서류 준비',
+    'time1-desc': '체크리스트 확인 후 필요서류 수집',
+    'time2-title': '1-2주 - 공증 및 번역',
+    'time2-desc': '베트남/한국 공증, 필요시 영문 번역',
+    'time3-title': '1주 - 출입국청 신청',
+    'time3-desc': '한국 배우자 또는 행정사를 통해 접수',
+    'time4-title': '4-8주 - 심사 대기',
+    'time4-desc': '평균 45일 (68%는 2개월 이내 승인)',
+    'approval-rate': '98% 승인율',
+    'approval-note': '당사 의뢰인 기준 (2024)',
+    'tab4-title': '한국 도착 후 72시간 필수 과제',
+    'day1-title': 'Day 1: 관할 경찰서 외국인등록',
+    'day1-desc': '필요: 여권, 건강검진증, 배우자 신분증 | 소요시간: 30분 | 비용: 무료',
+    'day2-title': 'Day 2: 은행 계좌 개설',
+    'day2-desc': '필요: 여권, 외국인등록증(발급 당일 가능), 배우자 명함 | 소요시간: 20분 | 비용: 무료',
+    'day3-title': 'Day 3: 통신사 휴대폰 개통',
+    'day3-desc': '필요: 여권, 외등기, 한글 주소 | 소요시간: 15분 | 월비: 30,000~50,000원',
+    'more-title': '+ 추가 권장',
+    'more-desc': '건강보험 가입 (2주 이내) | 국민연금 가입 (2개월 이내) | 보증금/월세 계약 (필요시)',
+    'stats-title': '우리의 기록',
+    'stat1': 'F-6 승인율',
+    'stat2': '평균 승인 기간',
+    'stat3': '베트남 커플 지원',
+    'stat4': '투명한 비용',
+    'case-title': '실제 사례',
+    'case1-title': '비자 거절 위험 해결',
+    'case1-problem': '고민: "비자 떨어질까?"',
+    'case1-quote': '"소득증명이 부족해서 거절이 우려됐는데, 위험도 진단에서 해결책을 찾았어요. 배우자 부모님 자산증명 추가로 98% 확률로 승인받았어요."',
+    'case1-author': 'Anh (베트남) + Min-jun (한국, 자영업)',
+    'case1-detail': '2024년 F-6 승인',
+    'case2-title': '서류 준비 3주 완성',
+    'case2-problem': '고민: "서류가 뭔지 모르겠어"',
+    'case2-quote': '"베트남에서 공증을 어디서 받을지 몰라서 막혔는데, 체크리스트를 따라하니까 깔끔하게 끝났어요. 시간도 반으로 줄었어요."',
+    'case2-author': 'Huong (베트남) + David (한국, 직장인)',
+    'case2-detail': '자가 신청으로 비용 절감',
+    'case3-title': '한국 생활 정착 가이드',
+    'case3-problem': '고민: "한국 와서 뭘 먼저 해"',
+    'case3-quote': '"도착 첫날 은행, 휴대폰, 등록을 혼자 다 했어요. 72시간 가이드덕분에 남편 없이도 모든 게 가능했어요. 베트남어도 있어서 정말 도움됐어요!"',
+    'case3-author': 'Thao (베트남) + Sung-ho (한국)',
+    'case3-detail': '6개월 만에 완전 정착',
+    'cta-title': '지금 바로 무료 상담 신청하세요',
+    'cta-desc': '변호사와 1:1 상담으로 당신의 상황에 맞는 정확한 전략을 수립합니다',
+    'btn-cta': '상담 예약하기 →',
+    'footer-copy': '© 2024 Marriage Visa 변호사 | leejy.law@gmail.com | 서울시 강남구',
+    'footer-terms': '이용약관',
+    'footer-privacy': '개인정보처리방침',
+    'footer-faq': 'FAQ',
+  },
+  en: {
+    'hero-title': 'Start Your Korean Marriage Life Together',
+    'hero-desc': 'From F-6 marriage visa to F-2 permanent residency and family sponsorship. Your lawyer handles every step.',
+    'btn-diagnosis': 'Free Risk Assessment',
+    'btn-consult': 'Book Consultation',
+    'progress-title': 'Where Are You in the Process?',
+    'stage1': 'Before Wedding',
+    'stage2': 'Applying for Visa',
+    'stage3': 'After Arrival in Korea',
+    'stage4': 'F-2 Preparation',
+    'solution-title': 'Solutions by Concern',
+    'tab1-label': 'Risk Assessment',
+    'tab2-label': 'Document Checklist',
+    'tab3-label': 'Cost & Timeline',
+    'tab4-label': 'Life Guide',
+    'tab1-title': 'What\'s Your F-6 Rejection Risk?',
+    'tab1-risk-label': 'Assessment Result',
+    'tab1-risk-text': '✓ Low (15%) - Approved in most cases',
+    'tab1-strength': '✓ Your Strengths',
+    'tab1-strength-text': 'Complete income documentation, marriage over 2 months, sufficient passport validity',
+    'tab1-caution': '! Things to Check',
+    'tab1-caution-text': 'Spouse criminal record verification needed (consultation required if exists)',
+    'tab2-title': 'F-6 Application Required Documents',
+    'doc1-name': 'Marriage Certificate (Korean + Vietnamese Official Copy)',
+    'doc1-desc': 'Issued by Vietnamese Embassy or Local Administrative Office',
+    'doc2-name': 'Korean Spouse ID Copy',
+    'doc2-desc': 'Both sides in color',
+    'doc3-name': 'Spouse Income Proof',
+    'doc3-desc': 'Salary slip or Business income certificate (last 3 months)',
+    'doc4-name': 'Foreign Spouse Passport Copy',
+    'doc4-desc': 'Valid for 6+ months',
+    'doc5-name': 'Family Relationship Certificate (Spouse)',
+    'doc5-desc': 'Issued by Korean administration',
+    'tab3-title': 'F-6 Application Cost',
+    'cost1-label': 'Immigration Fee',
+    'cost2-label': 'Vietnam Notary (optional)',
+    'cost3-label': 'Korea Notary (optional)',
+    'cost4-label': 'Admin Service Fee (optional)',
+    'tab3-timeline': 'Timeline to Approval',
+    'time1-title': 'Week 1 - Document Preparation',
+    'time1-desc': 'Review checklist and collect required documents',
+    'time2-title': '1-2 Weeks - Notarization & Translation',
+    'time2-desc': 'Vietnam/Korea notarization, translation if needed',
+    'time3-title': '1 Week - Immigration Application',
+    'time3-desc': 'Submit through Korean spouse or admin service',
+    'time4-title': '4-8 Weeks - Review Period',
+    'time4-desc': 'Average 45 days (68% approved within 2 months)',
+    'approval-rate': '98% Approval Rate',
+    'approval-note': 'Based on our clients (2024)',
+    'tab4-title': 'Your First 72 Hours in Korea',
+    'day1-title': 'Day 1: Foreign Registration at Police',
+    'day1-desc': 'Required: Passport, health certificate, spouse ID | Time: 30 min | Cost: Free',
+    'day2-title': 'Day 2: Bank Account Opening',
+    'day2-desc': 'Required: Passport, foreign reg. card, spouse name card | Time: 20 min | Cost: Free',
+    'day3-title': 'Day 3: Mobile Phone Setup',
+    'day3-desc': 'Required: Passport, foreign reg. card, Korean address | Time: 15 min | Monthly: 30-50k KRW',
+    'more-title': '+ Recommended',
+    'more-desc': 'Health Insurance (within 2 weeks) | National Pension (within 2 months) | Deposit/Lease Contract (if needed)',
+    'stats-title': 'Our Record',
+    'stat1': 'F-6 Approval Rate',
+    'stat2': 'Average Days to Approval',
+    'stat3': 'Vietnamese Couples Supported',
+    'stat4': 'Transparent Costs',
+    'case-title': 'Real Stories',
+    'case1-title': 'Rejection Risk Resolved',
+    'case1-problem': 'Concern: "Will my visa be rejected?"',
+    'case1-quote': '"I was worried about insufficient income, but the risk assessment showed me the solution. Adding my in-laws\' asset certificate, I got approved with 98% certainty!"',
+    'case1-author': 'Anh (Vietnam) + Min-jun (Korea, Self-employed)',
+    'case1-detail': '2024 F-6 Approved',
+    'case2-title': 'Documents Ready in 3 Weeks',
+    'case2-problem': 'Concern: "I don\'t know what documents I need"',
+    'case2-quote': '"I didn\'t know where to get Vietnam notarized, but following the checklist, everything was smooth. Cut the time in half!"',
+    'case2-author': 'Huong (Vietnam) + David (Korea, Office Worker)',
+    'case2-detail': 'Self-applied and saved costs',
+    'case3-title': 'Korea Life Settlement Guide',
+    'case3-problem': 'Concern: "What do I do first when I arrive?"',
+    'case3-quote': '"I did everything myself the first day: bank, phone, registration. The 72-hour guide made it all possible without my husband. Vietnamese version was a lifesaver!"',
+    'case3-author': 'Thao (Vietnam) + Sung-ho (Korea)',
+    'case3-detail': 'Fully settled in 6 months',
+    'cta-title': 'Get Your Free Consultation Now',
+    'cta-desc': '1:1 consultation with a lawyer to create your perfect strategy',
+    'btn-cta': 'Book Consultation →',
+    'footer-copy': '© 2024 Marriage Visa Lawyer | leejy.law@gmail.com | Seoul, Gangnam-gu',
+    'footer-terms': 'Terms of Service',
+    'footer-privacy': 'Privacy Policy',
+    'footer-faq': 'FAQ',
+  },
+  vi: {
+    'hero-title': 'Bắt đầu cuộc sống hôn nhân ở Hàn Quốc',
+    'hero-desc': 'Từ visa F-6 cho người kết hôn đến thường trú F-2 và tài trợ gia đình. Luật sư của chúng tôi xử lý từng bước.',
+    'btn-diagnosis': 'Đánh giá rủi ro miễn phí',
+    'btn-consult': 'Đặt tư vấn',
+    'progress-title': 'Bạn đang ở đâu trong quá trình?',
+    'stage1': 'Trước đám cưới',
+    'stage2': 'Đang xin visa',
+    'stage3': 'Sau khi đến Hàn Quốc',
+    'stage4': 'Chuẩn bị F-2',
+    'solution-title': 'Giải pháp theo mối lo ngại',
+    'tab1-label': 'Đánh giá rủi ro',
+    'tab2-label': 'Danh sách tài liệu',
+    'tab3-label': 'Chi phí & Lịch trình',
+    'tab4-label': 'Hướng dẫn sống',
+    'tab1-title': 'Rủi ro bị từ chối F-6 của bạn là gì?',
+    'tab1-risk-label': 'Kết quả đánh giá',
+    'tab1-risk-text': '✓ Thấp (15%) - Phê duyệt trong hầu hết trường hợp',
+    'tab1-strength': '✓ Điểm mạnh của bạn',
+    'tab1-strength-text': 'Tài liệu thu nhập hoàn chỉnh, hôn nhân trên 2 tháng, hộ chiếu còn hạn',
+    'tab1-caution': '! Điều cần kiểm tra',
+    'tab1-caution-text': 'Cần xác minh hồ sơ hình sự của vợ/chồng (tư vấn bắt buộc nếu có)',
+    'tab2-title': 'Tài liệu bắt buộc xin F-6',
+    'doc1-name': 'Giấy chứng thực hôn nhân (Hàn Quốc + Bản chính Việt Nam)',
+    'doc1-desc': 'Do Đại sứ quán Việt Nam hoặc Phòng Hành chính địa phương cấp',
+    'doc2-name': 'Bản sao CMND vợ/chồng Hàn Quốc',
+    'doc2-desc': 'Cả hai mặt in màu',
+    'doc3-name': 'Bằng chứng thu nhập vợ/chồng',
+    'doc3-desc': 'Phiếu lương hoặc Giấy chứng nhận thu nhập kinh doanh (3 tháng gần đây)',
+    'doc4-name': 'Bản sao hộ chiếu vợ/chồng nước ngoài',
+    'doc4-desc': 'Có hiệu lực từ 6 tháng trở lên',
+    'doc5-name': 'Giấy chứng thực quan hệ gia đình (Vợ/chồng)',
+    'doc5-desc': 'Do cơ quan Hàn Quốc cấp',
+    'tab3-title': 'Chi phí xin F-6',
+    'cost1-label': 'Phí nhập cư',
+    'cost2-label': 'Công chứng Việt Nam (tùy chọn)',
+    'cost3-label': 'Công chứng Hàn Quốc (tùy chọn)',
+    'cost4-label': 'Phí dịch vụ hành chính (tùy chọn)',
+    'tab3-timeline': 'Lịch trình phê duyệt',
+    'time1-title': 'Tuần 1 - Chuẩn bị tài liệu',
+    'time1-desc': 'Kiểm tra danh sách và thu thập tài liệu cần thiết',
+    'time2-title': '1-2 tuần - Công chứng & Dịch thuật',
+    'time2-desc': 'Công chứng Việt Nam/Hàn Quốc, dịch nếu cần',
+    'time3-title': '1 tuần - Đơn xin nhập cư',
+    'time3-desc': 'Nộp qua vợ/chồng Hàn Quốc hoặc dịch vụ hành chính',
+    'time4-title': '4-8 tuần - Giai đoạn xem xét',
+    'time4-desc': 'Trung bình 45 ngày (68% phê duyệt trong 2 tháng)',
+    'approval-rate': 'Tỷ lệ phê duyệt 98%',
+    'approval-note': 'Dựa trên khách hàng của chúng tôi (2024)',
+    'tab4-title': '72 giờ đầu tiên của bạn ở Hàn Quốc',
+    'day1-title': 'Ngày 1: Đăng ký nước ngoài tại Cảnh sát',
+    'day1-desc': 'Cần: Hộ chiếu, Giấy chứng nhận sức khỏe, CMND vợ/chồng | Thời gian: 30 phút | Phí: Miễn phí',
+    'day2-title': 'Ngày 2: Mở tài khoản ngân hàng',
+    'day2-desc': 'Cần: Hộ chiếu, Thẻ đăng ký nước ngoài, Danh thiếp vợ/chồng | Thời gian: 20 phút | Phí: Miễn phí',
+    'day3-title': 'Ngày 3: Kích hoạt điện thoại di động',
+    'day3-desc': 'Cần: Hộ chiếu, Thẻ đăng ký, Địa chỉ Hàn Quốc | Thời gian: 15 phút | Hàng tháng: 30-50k KRW',
+    'more-title': '+ Được khuyến nghị',
+    'more-desc': 'Bảo hiểm sức khỏe (trong 2 tuần) | Lương hưu Quốc gia (trong 2 tháng) | Hợp đồng tiền cọc/Cho thuê (nếu cần)',
+    'stats-title': 'Kỷ lục của chúng tôi',
+    'stat1': 'Tỷ lệ phê duyệt F-6',
+    'stat2': 'Trung bình ngày phê duyệt',
+    'stat3': 'Cặp vợ chồng Việt Nam được hỗ trợ',
+    'stat4': 'Chi phí minh bạch',
+    'case-title': 'Câu chuyện thực tế',
+    'case1-title': 'Giải quyết rủi ro bị từ chối',
+    'case1-problem': 'Mối lo ngại: "Visa của tôi có bị từ chối không?"',
+    'case1-quote': '"Tôi lo lắng về thu nhập không đủ, nhưng đánh giá rủi ro đã giúp tôi tìm ra giải pháp. Thêm giấy chứng nhận tài sản của bố mẹ chồng, tôi được phê duyệt với 98% chắc chắn!"',
+    'case1-author': 'Anh (Việt Nam) + Min-jun (Hàn Quốc, Tự kinh doanh)',
+    'case1-detail': 'Phê duyệt F-6 năm 2024',
+    'case2-title': 'Hoàn tất tài liệu trong 3 tuần',
+    'case2-problem': 'Mối lo ngại: "Tôi không biết tài liệu nào là cần thiết"',
+    'case2-quote': '"Tôi không biết lấy công chứng Việt Nam ở đâu, nhưng theo danh sách kiểm tra, mọi thứ đều suôn sẻ. Tiết kiệm được nửa thời gian!"',
+    'case2-author': 'Huong (Việt Nam) + David (Hàn Quốc, Nhân viên văn phòng)',
+    'case2-detail': 'Tự nộp đơn và tiết kiệm chi phí',
+    'case3-title': 'Hướng dẫn định cư ở Hàn Quốc',
+    'case3-problem': 'Mối lo ngại: "Tôi nên làm gì trước khi đến?"',
+    'case3-quote': '"Tôi tự làm mọi thứ ngày đầu: ngân hàng, điện thoại, đăng ký. Hướng dẫn 72 giờ giúp tôi làm được mà không cần chồng. Phiên bản Việt Nam rất hữu ích!"',
+    'case3-author': 'Thao (Việt Nam) + Sung-ho (Hàn Quốc)',
+    'case3-detail': 'Định cư hoàn toàn trong 6 tháng',
+    'cta-title': 'Nhận tư vấn miễn phí ngay',
+    'cta-desc': 'Tư vấn 1:1 với luật sư để tạo chiến lược hoàn hảo cho bạn',
+    'btn-cta': 'Đặt tư vấn →',
+    'footer-copy': '© 2024 Luật sư Hôn nhân Visa | leejy.law@gmail.com | Seoul, Gangnam-gu',
+    'footer-terms': 'Điều khoản dịch vụ',
+    'footer-privacy': 'Chính sách bảo mật',
+    'footer-faq': 'Câu hỏi thường gặp',
+  }
+};
+
+function setLang(lang) {
+  document.querySelectorAll('.lang-switch span').forEach(s => s.classList.remove('active'));
+  event.target.classList.add('active');
+
+  for (let key in content[lang]) {
+    const elem = document.getElementById(key);
+    if (elem) elem.textContent = content[lang][key];
+  }
+
+  document.querySelectorAll('.stage').forEach((s, i) => {
+    s.textContent = [content[lang]['stage1'], content[lang]['stage2'], content[lang]['stage3'], content[lang]['stage4']][i];
+  });
+
+  document.querySelectorAll('.tab span').forEach((s, i) => {
+    const labels = [content[lang]['tab1-label'], content[lang]['tab2-label'], content[lang]['tab3-label'], content[lang]['tab4-label']];
+    s.textContent = labels[i];
+  });
+}
+
+function switchTab(n) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab')[n].classList.add('active');
+  document.querySelectorAll('.tab-content')[n].classList.add('active');
+}
+
+document.querySelectorAll('.checkbox').forEach(box => {
+  box.addEventListener('click', () => box.classList.toggle('checked'));
+});
+
+document.querySelectorAll('.stage').forEach(stage => {
+  stage.addEventListener('click', () => {
+    document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+    stage.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
