@@ -1,0 +1,81 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "lira-static",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".claude/serve.ps1",
+        "-Port",
+        "8731"
+      ],
+      "port": 8731
+    },
+    {
+      "name": "lira2-static",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".claude/serve-lira2.ps1",
+        "-Port",
+        "8732"
+      ],
+      "port": 8732
+    },
+    {
+      "name": "thislaw",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".claude/serve-thislaw.ps1",
+        "-Port",
+        "8733"
+      ],
+      "port": 8733
+    },
+    {
+      "name": "whenmeet",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "../whenmeet/dev-server.js",
+        "8734"
+      ],
+      "port": 8734
+    },
+    {
+      "name": "lira2-web",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".claude/serve-lira2web.ps1",
+        "-Port",
+        "8735"
+      ],
+      "port": 8735
+    },
+    {
+      "name": "lira2-api",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--prefix",
+        "../LIRA2/apps/api"
+      ],
+      "port": 3001
+    }
+  ]
+}
